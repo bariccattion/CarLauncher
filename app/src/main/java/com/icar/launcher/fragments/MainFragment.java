@@ -3,19 +3,20 @@ package com.icar.launcher.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.github.matteobattilana.weather.PrecipType;
 import com.github.matteobattilana.weather.WeatherView;
 import com.github.matteobattilana.weather.WeatherViewSensorEventListener;
 import com.icar.launcher.R;
+import com.lypeer.googleioclock.GoogleClock;
 import com.tunabaranurut.microdb.base.MicroDB;
 
 import studios.codelight.weatherdownloaderlibrary.model.WeatherData;
@@ -90,6 +91,9 @@ public class MainFragment extends Fragment {
         humidity=rootView.findViewById(R.id.humidity);
         cityName=rootView.findViewById(R.id.cityName);
 
+        GoogleClock g = rootView.findViewById(R.id.gclock);
+
+        Animation test = g.getAnimation();
         weatherSensor = new WeatherViewSensorEventListener(this.getContext(), weatherView);
         microDB = new MicroDB(getContext());
 
