@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,9 +15,9 @@ import com.github.matteobattilana.weather.PrecipType;
 import com.github.matteobattilana.weather.WeatherView;
 import com.github.matteobattilana.weather.WeatherViewSensorEventListener;
 import com.icar.launcher.R;
-import com.lypeer.googleioclock.GoogleClock;
 import com.tunabaranurut.microdb.base.MicroDB;
 
+import io.armcha.elasticview.ElasticView;
 import studios.codelight.weatherdownloaderlibrary.model.WeatherData;
 
 
@@ -40,6 +39,9 @@ public class MainFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     MicroDB microDB;
+    ElasticView elasticView;
+    TextView temp, pressure, humidity, cityName;
+    ImageView weatherImg;
 
     private OnFragmentInteractionListener mListener;
 
@@ -84,20 +86,22 @@ public class MainFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         weatherView = rootView.findViewById(R.id.weather_view);
 
-        TextView temp,pressure,humidity,cityName;
-        ImageView weatherImg = rootView.findViewById(R.id.imageClimate);
+
+        weatherImg = rootView.findViewById(R.id.imageClimate);
         temp=rootView.findViewById(R.id.temp);
         pressure=rootView.findViewById(R.id.pressure);
         humidity=rootView.findViewById(R.id.humidity);
         cityName=rootView.findViewById(R.id.cityName);
 
-        GoogleClock g = rootView.findViewById(R.id.gclock);
+        //GoogleClock g = rootView.findViewById(R.id.gclock);
+        elasticView = rootView.findViewById(R.id.weatherWidget);
 
-        Animation test = g.getAnimation();
+
+        //Animation test = g.getAnimation();
         weatherSensor = new WeatherViewSensorEventListener(this.getContext(), weatherView);
         microDB = new MicroDB(getContext());
 
-        doWeatherStuff(temp,pressure,humidity,cityName,weatherImg);
+        doWeatherStuff();
 
         return rootView;
     }
@@ -143,7 +147,7 @@ public class MainFragment extends Fragment {
     }
 
 
-    private void doWeatherStuff(TextView temp, TextView pressure, TextView humidity, TextView cityName, ImageView weatherImg){
+    private void doWeatherStuff() {
         try{data = microDB.load("weatherInfo",WeatherData.class);}catch (Exception e){}
 
         if(Integer.parseInt(data.getWeather()[0].getId())>=200 && Integer.parseInt(data.getWeather()[0].getId())<300){
@@ -176,6 +180,11 @@ public class MainFragment extends Fragment {
             weatherView.setWeatherData(PrecipType.CLEAR);
             weatherImg.setImageResource(R.drawable.ic_sun);
 
+            weatherView.setWeatherData(PrecipType.RAIN);
+            weatherView.setSpeed(800);
+            weatherView.setEmissionRate(600);
+            weatherImg.setImageResource(R.drawable.ic_rain);
+
         }
         else if(Integer.parseInt(data.getWeather()[0].getId())==803 || Integer.parseInt(data.getWeather()[0].getId())==804){
             //	lots of clouds
@@ -188,5 +197,16 @@ public class MainFragment extends Fragment {
         pressure.setText("Pressão: "+(int)(Double.parseDouble(data.getMain().getPressure())) + " hPa");
         humidity.setText("Humidade: "+data.getMain().getHumidity() + " %");
         cityName.setText(data.getName());
+
+        elasticView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (weatherView.getPrecipType() != PrecipType.CLEAR) {
+                    weatherView.setWeatherData(PrecipType.CLEAR);
+                } else {
+                    doWeatherStuff();
+                }
+            }
+        });
     }
 }
