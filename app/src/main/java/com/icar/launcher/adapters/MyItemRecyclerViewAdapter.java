@@ -1,12 +1,14 @@
 package com.icar.launcher.adapters;
 
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.icar.launcher.R;
 import com.icar.launcher.content.AppListContent;
@@ -37,18 +39,18 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = mValues.get(position);
         holder.mName.setText(mValues.get(position).name);
         holder.mVersion.setText(mValues.get(position).version);
         holder.mImage.setImageDrawable(mValues.get(position).image);
-
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
+                    Activity host = (Activity) holder.mView.getContext();
+                    Intent launchIntent = host.getPackageManager().getLaunchIntentForPackage(mValues.get(position).packageName);
+                    host.startActivity(launchIntent);
                     mListener.onListFragmentInteraction(holder.mItem);
                 }
             }
@@ -70,8 +72,8 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mName = (TextView) view.findViewById(R.id.name);
-            mVersion = (TextView) view.findViewById(R.id.version);
+            mName = view.findViewById(R.id.name);
+            mVersion = view.findViewById(R.id.version);
             mImage = view.findViewById(R.id.imageView);
         }
 

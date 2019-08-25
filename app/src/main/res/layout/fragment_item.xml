@@ -12,6 +12,7 @@
     app:cardElevation="18dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
     <LinearLayout
         android:layout_width="@dimen/cardsize"
         android:layout_height="match_parent"

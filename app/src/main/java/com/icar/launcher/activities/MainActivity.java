@@ -1,6 +1,9 @@
 package com.icar.launcher.activities;
 
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,17 +20,18 @@ import com.icar.launcher.R;
 import com.icar.launcher.content.AppListContent;
 import com.icar.launcher.fragments.ListFragment;
 import com.icar.launcher.fragments.MainFragment;
-import com.location.aravind.getlocation.GeoLocator;
+import com.icar.launcher.location.LocationInfo;
 import com.tunabaranurut.microdb.base.MicroDB;
 
 import studios.codelight.weatherdownloaderlibrary.WeatherDownloader;
 import studios.codelight.weatherdownloaderlibrary.model.WeatherData;
 
-public class MainActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener , ListFragment.OnListFragmentInteractionListener, WeatherDownloader.WeatherDataDownloadListener {
+public class MainActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener, ListFragment.OnListFragmentInteractionListener, WeatherDownloader.WeatherDataDownloadListener, LocationListener {
     ImageButton button1,button2,button3;
     TabHost tabHost;
     FragmentManager fm;
     MicroDB microDB;
+    Double latitude, longitude;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -44,16 +48,21 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
 
         microDB = new MicroDB(this);
 
-        MainFragment();
 
-        GeoLocator geoLocator = new GeoLocator(getApplicationContext(),this);
-        String coordinatesQuery = geoLocator.getLattitude()+":"+geoLocator.getLongitude();
+        //GeoLocator geoLocator = new GeoLocator(getApplicationContext(),MainActivity.this);
+        //String coordinatesQuery = geoLocator.getLattitude()+":"+geoLocator.getLongitude();
+
+
+        LocationManager locationManager = LocationInfo.getLocation(this);
+
+        String coordinatesQuery = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLatitude() + ":" + locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLongitude();
         WeatherDownloader downloader = new WeatherDownloader(this, WeatherDownloader.Mode.COORDINATES);
         downloader.getCurrentWeatherData(getResources().getString(R.string.apikey), coordinatesQuery);
 
 
 
     }
+
 
     @Override
     public void onFragmentInteraction(Uri uri){
@@ -76,8 +85,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
     @Override
     public void onWeatherDownloadComplete(WeatherData data, WeatherDownloader.Mode mode) {
         try{microDB.save("weatherInfo",data);}catch (Exception e){
-            Log.d("D","D");
+
         }
+        MainFragment();
     }
 
     @Override
@@ -99,6 +109,29 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
                         // Hide the nav bar and status bar
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        //locationText = location.getLatitude() + "," + location.getLongitude();
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        //Toast.makeText(OfflineGPS.this, "Please Enable GPS", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
     }
 
     public void tabHandler(View target){

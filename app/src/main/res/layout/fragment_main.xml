@@ -24,8 +24,6 @@
                 android:layout_weight="0"
                 android:fontFamily="@font/open_sans_light"
                 android:padding="@dimen/defaultpaddinglarge"
-                android:paddingStart="50dp"
-                android:paddingEnd="50dp"
                 android:textColor="@color/colorText"
                 android:textSize="60sp" />
                 <io.armcha.elasticview.ElasticView
@@ -102,6 +100,7 @@
                             android:textColor="@color/colorText"
                             android:gravity="center"
                             android:padding="@dimen/defaultpadding"
+                            android:paddingBottom="@dimen/defaultpaddinglarge"
                             android:layout_gravity="center"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/pressure"

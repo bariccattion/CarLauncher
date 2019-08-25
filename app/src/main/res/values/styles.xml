@@ -8,6 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
+
+    <style name="AppTheme.FullScreen" parent="@style/Theme.AppCompat.Light">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
     <style name="LyTheme2" parent="LyTheme">
         <item name="lyColor0">#66A5AD</item>
         <item name="lyColor1">#36767e</item>
