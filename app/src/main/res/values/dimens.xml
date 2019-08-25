@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_margin">16dp</dimen>
+    <dimen name="cardsize">120dp</dimen>
+    <dimen name="paddingcardshor">15dp</dimen>
+    <dimen name="paddingcardsver">20dp</dimen>
+    <dimen name="defaultpadding">10dp</dimen>
+    <dimen name="defaultpaddinglarge">20dp</dimen>
+</resources>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Launcher</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="apikey">0f5489226424ff973d5f3688015d8826</string>
+</resources>
