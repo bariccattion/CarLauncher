@@ -8,7 +8,7 @@
     android:layout_marginBottom="@dimen/paddingcardsver"
     app:flexibility="8"
     app:cardBackgroundColor="@color/colorBgTransparent"
-    app:cardCornerRadius="2dp"
+    app:cardCornerRadius="4dp"
     app:cardElevation="18dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">

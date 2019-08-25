@@ -11,28 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <FrameLayout
-                android:id="@+id/fragment_container"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"></FrameLayout>
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/bgAnimation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:lottie_autoPlay="true"
-                app:lottie_fileName="bg.json"
-                app:lottie_loop="true"
-                app:lottie_scale="20"
-                app:lottie_speed="0.75" />
-        </FrameLayout>
-
         <TabHost
             android:id="@+id/tabhost"
             android:layout_width="wrap_content"
@@ -82,5 +60,28 @@
                     android:visibility="gone" />
             </FrameLayout>
         </TabHost>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/bgAnimation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="bg.json"
+                app:lottie_loop="true"
+                app:lottie_scale="20"
+                app:lottie_speed="0.75" />
+
+            <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"></FrameLayout>
+
+        </FrameLayout>
     </LinearLayout>
+
 </FrameLayout>

@@ -1,11 +1,5 @@
 package com.icar.launcher.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +8,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TabHost;
 
-import com.github.matteobattilana.weather.WeatherViewSensorEventListener;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.icar.launcher.R;
 import com.icar.launcher.content.AppListContent;
 import com.icar.launcher.fragments.ListFragment;
@@ -30,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
     TabHost tabHost;
     FragmentManager fm;
     MicroDB microDB;
-    WeatherViewSensorEventListener weatherSensor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

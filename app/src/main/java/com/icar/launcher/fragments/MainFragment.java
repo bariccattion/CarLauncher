@@ -6,14 +6,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import com.github.matteobattilana.weather.PrecipType;
-import com.github.matteobattilana.weather.WeatherView;
-import com.github.matteobattilana.weather.WeatherViewSensorEventListener;
 import com.icar.launcher.R;
 import com.tunabaranurut.microdb.base.MicroDB;
 
@@ -41,12 +37,10 @@ public class MainFragment extends Fragment {
     MicroDB microDB;
     ElasticView elasticView;
     TextView temp, pressure, humidity, cityName;
-    ImageView weatherImg;
+    com.airbnb.lottie.LottieAnimationView weatherImg;
 
     private OnFragmentInteractionListener mListener;
 
-    WeatherViewSensorEventListener weatherSensor;
-    WeatherView weatherView;
     WeatherData data;
     public MainFragment() {
         // Required empty public constructor
@@ -84,10 +78,10 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        weatherView = rootView.findViewById(R.id.weather_view);
+        //weatherView = rootView.findViewById(R.id.weather_view);
 
 
-        weatherImg = rootView.findViewById(R.id.imageClimate);
+        weatherImg = rootView.findViewById(R.id.climateAnimation);
         temp=rootView.findViewById(R.id.temp);
         pressure=rootView.findViewById(R.id.pressure);
         humidity=rootView.findViewById(R.id.humidity);
@@ -98,7 +92,7 @@ public class MainFragment extends Fragment {
 
 
         //Animation test = g.getAnimation();
-        weatherSensor = new WeatherViewSensorEventListener(this.getContext(), weatherView);
+        //weatherSensor = new WeatherViewSensorEventListener(this.getContext(), weatherView);
         microDB = new MicroDB(getContext());
 
         doWeatherStuff();
@@ -152,61 +146,50 @@ public class MainFragment extends Fragment {
 
         if(Integer.parseInt(data.getWeather()[0].getId())>=200 && Integer.parseInt(data.getWeather()[0].getId())<300){
             //Thunderstorm
-            weatherView.setWeatherData(PrecipType.RAIN);
-            weatherView.setSpeed(1000);
-            weatherView.setEmissionRate(1000);
-            weatherImg.setImageResource(R.drawable.ic_storm);
+            //weatherView.setWeatherData(PrecipType.RAIN);
+            //weatherView.setSpeed(1000);
+            //weatherView.setEmissionRate(1000);
+            weatherImg.setAnimation("storm.json");
+            //weatherImg.setImageResource(R.drawable.ic_storm);
         }
         else if(Integer.parseInt(data.getWeather()[0].getId())>=300 && Integer.parseInt(data.getWeather()[0].getId())<400){
             //Drizzle
-            weatherView.setWeatherData(PrecipType.RAIN);
-            weatherView.setSpeed(600);
-            weatherView.setEmissionRate(200);
-            weatherImg.setImageResource(R.drawable.ic_lightrain);
+            //weatherView.setWeatherData(PrecipType.RAIN);
+            //weatherView.setSpeed(600);
+            //weatherView.setEmissionRate(200);
+            //weatherImg.setImageResource(R.drawable.ic_lightrain)
+            weatherImg.setAnimation("rain.json");
+            weatherImg.setSpeed((float) 0.5);
 
         }
         else if(Integer.parseInt(data.getWeather()[0].getId())>=500 && Integer.parseInt(data.getWeather()[0].getId())<600){
-            weatherView.setWeatherData(PrecipType.RAIN);
-            weatherView.setSpeed(800);
-            weatherView.setEmissionRate(600);
-            weatherImg.setImageResource(R.drawable.ic_rain);
+            //weatherView.setWeatherData(PrecipType.RAIN);
+            //weatherView.setSpeed(800);
+            //weatherView.setEmissionRate(600);
+            weatherImg.setAnimation("rain.json");
         }
         else if(Integer.parseInt(data.getWeather()[0].getId())>=600 && Integer.parseInt(data.getWeather()[0].getId())<700){
-            weatherView.setWeatherData(PrecipType.SNOW);
-            weatherImg.setImageResource(R.drawable.ic_snow);
+            //weatherView.setWeatherData(PrecipType.SNOW);
+            weatherImg.setAnimation("snow.json");
         }
         else if(Integer.parseInt(data.getWeather()[0].getId())==800){
             //limpo
-            weatherView.setWeatherData(PrecipType.CLEAR);
-            weatherImg.setImageResource(R.drawable.ic_sun);
-
-            weatherView.setWeatherData(PrecipType.RAIN);
-            weatherView.setSpeed(800);
-            weatherView.setEmissionRate(600);
-            weatherImg.setImageResource(R.drawable.ic_rain);
-
+            //weatherView.setWeatherData(PrecipType.CLEAR);
+            weatherImg.setAnimation("rain.json");
+            weatherImg.setSpeed((float) 0.5);
         }
         else if(Integer.parseInt(data.getWeather()[0].getId())==803 || Integer.parseInt(data.getWeather()[0].getId())==804){
             //	lots of clouds
-            weatherImg.setImageResource(R.drawable.ic_partlycloudy);
+            weatherImg.setAnimation("clouds.json");
         }
         else{
-            weatherImg.setImageResource(R.drawable.ic_sun);
+            //some clouds
+            weatherImg.setAnimation("someclouds.json");
         }
         temp.setText("Temperatura: "+(int)(Double.parseDouble(data.getMain().getTemp())-273.15) + " °C");
         pressure.setText("Pressão: "+(int)(Double.parseDouble(data.getMain().getPressure())) + " hPa");
         humidity.setText("Humidade: "+data.getMain().getHumidity() + " %");
         cityName.setText(data.getName());
 
-        elasticView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (weatherView.getPrecipType() != PrecipType.CLEAR) {
-                    weatherView.setWeatherData(PrecipType.CLEAR);
-                } else {
-                    doWeatherStuff();
-                }
-            }
-        });
     }
 }

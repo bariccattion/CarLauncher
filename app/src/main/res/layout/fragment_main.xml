@@ -17,24 +17,17 @@
             android:layout_height="200dp"
             android:gravity="center">
 
-            <com.lypeer.googleioclock.GoogleClock
-                android:id="@+id/gclock"
+            <TextClock
+                android:id="@+id/digitalClock"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="@dimen/defaultpadding"
-                android:layout_weight="0"
-                app:lyTheme="@style/LyTheme2"/>
-
-            <FrameLayout
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                >
-                <com.github.matteobattilana.weather.WeatherView
-                    android:id="@+id/weather_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"/>
+                android:layout_weight="0"
+                android:fontFamily="@font/open_sans_light"
+                android:padding="@dimen/defaultpaddinglarge"
+                android:paddingStart="50dp"
+                android:paddingEnd="50dp"
+                android:textColor="@color/colorText"
+                android:textSize="60sp" />
                 <io.armcha.elasticview.ElasticView
                     android:id="@+id/weatherWidget"
                     android:layout_width="wrap_content"
@@ -45,9 +38,8 @@
                     android:layout_marginBottom="@dimen/paddingcardsver"
                     app:flexibility="8"
                     app:cardBackgroundColor="@color/colorBgTransparent"
-                    app:cardCornerRadius="2dp"
+                    app:cardCornerRadius="4dp"
                     app:cardElevation="18dp"
-                    app:contentPadding="@dimen/defaultpaddinglarge"
                     android:orientation="horizontal"
                     android:layout_gravity="center">
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,6 +54,7 @@
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/open_sans_light"
                             android:textSize="22sp"
+                            android:padding="@dimen/defaultpadding"
                             android:text="balblabalbalblab"
                             android:textColor="@color/colorText"
                             android:gravity="center"
@@ -76,6 +69,7 @@
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/open_sans_light"
                             android:paddingTop="5dp"
+                            android:padding="@dimen/defaultpadding"
                             android:text="balblabalbalblab"
                             android:gravity="center"
                             android:layout_gravity="center"
@@ -92,6 +86,7 @@
                             android:text="balblabalbalblab"
                             android:textColor="@color/colorText"
                             android:gravity="center"
+                            android:padding="@dimen/defaultpadding"
                             android:layout_gravity="center"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/temp"
@@ -106,23 +101,25 @@
                             android:text="balblabalbalblab"
                             android:textColor="@color/colorText"
                             android:gravity="center"
+                            android:padding="@dimen/defaultpadding"
                             android:layout_gravity="center"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/pressure"
                             android:background="@android:color/transparent"/>
 
-                        <ImageView
-                            android:paddingStart="@dimen/defaultpaddinglarge"
-                            android:paddingEnd="@dimen/defaultpaddinglarge"
-                            android:background="@android:color/transparent"
-                            android:id="@+id/imageClimate"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/climateAnimation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:lottie_autoPlay="true"
+                            app:lottie_loop="true"
+                            app:lottie_scale="1"
+                            app:lottie_speed="1"
                             app:layout_constraintStart_toEndOf="@id/temp"
                             app:layout_constraintTop_toTopOf="parent"/>
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </io.armcha.elasticview.ElasticView>
-            </FrameLayout>
         </TableRow>
 
         <fragment
