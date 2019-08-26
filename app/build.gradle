@@ -33,7 +33,8 @@ dependencies {
     implementation 'com.github.AravindVijay7:GeoLocator-Android:1.0.2'
     implementation 'com.github.lypeer:GoogleClock:1.0.0'
     implementation 'com.airbnb.android:lottie:3.0.7'
-    implementation (group: 'com.tunabaranurut', name: 'microdb', version: '0.2.11', ext: 'aar', classifier: 'debug'){
+    implementation 'in.unicodelabs.sorbh:kdgaugeview:1.0.0'
+    implementation(group: 'com.tunabaranurut', name: 'microdb', version: '0.2.11', ext: 'aar', classifier: 'debug') {
         transitive = true
     }
 }

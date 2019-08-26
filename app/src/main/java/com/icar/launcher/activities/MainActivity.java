@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.icar.launcher.R;
 import com.icar.launcher.content.AppListContent;
+import com.icar.launcher.fragments.CarFragment;
 import com.icar.launcher.fragments.ListFragment;
 import com.icar.launcher.fragments.MainFragment;
 import com.icar.launcher.location.LocationInfo;
@@ -141,6 +142,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
         if(target.getId() == R.id.button1){
             tabHost.setCurrentTab(0);
             button1.setSelected(true);
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.fragment_container, new CarFragment());
+            ft.commit();
         } else if(target.getId() == R.id.button2){
             if(tabHost.getCurrentTab()!=1){
                 MainFragment();

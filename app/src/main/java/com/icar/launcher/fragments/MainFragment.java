@@ -175,7 +175,7 @@ public class MainFragment extends Fragment {
         else if(Integer.parseInt(data.getWeather()[0].getId())==800){
             //limpo
             //weatherView.setWeatherData(PrecipType.CLEAR);
-            weatherImg.setAnimation("rain.json");
+            weatherImg.setAnimation("sun.json");
             weatherImg.setSpeed((float) 0.5);
         }
         else if(Integer.parseInt(data.getWeather()[0].getId())==803 || Integer.parseInt(data.getWeather()[0].getId())==804){
