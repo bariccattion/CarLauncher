@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.1"
     defaultConfig {
         applicationId "com.icar.launcher"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -34,6 +34,9 @@ dependencies {
     implementation 'com.github.lypeer:GoogleClock:1.0.0'
     implementation 'com.airbnb.android:lottie:3.0.7'
     implementation 'in.unicodelabs.sorbh:kdgaugeview:1.0.0'
+    implementation 'com.github.andremion:musiccoverview:1.0.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation(group: 'com.tunabaranurut', name: 'microdb', version: '0.2.11', ext: 'aar', classifier: 'debug') {
         transitive = true
     }

@@ -1,6 +1,7 @@
 package com.icar.launcher.activities;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -22,6 +23,7 @@ import com.icar.launcher.fragments.CarFragment;
 import com.icar.launcher.fragments.ListFragment;
 import com.icar.launcher.fragments.MainFragment;
 import com.icar.launcher.location.LocationInfo;
+import com.icar.launcher.receiver.MusicReceiver;
 import com.tunabaranurut.microdb.base.MicroDB;
 
 import studios.codelight.weatherdownloaderlibrary.WeatherDownloader;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
     FragmentManager fm;
     MicroDB microDB;
     Double latitude, longitude;
+    MusicReceiver musicReceiver = new MusicReceiver();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -53,6 +56,37 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
         //GeoLocator geoLocator = new GeoLocator(getApplicationContext(),MainActivity.this);
         //String coordinatesQuery = geoLocator.getLattitude()+":"+geoLocator.getLongitude();
 
+
+        IntentFilter iF = new IntentFilter();
+        iF.addAction("com.android.music.metachanged");
+        iF.addAction("com.android.music.playstatechanged");
+        iF.addAction("fm.last.android.metachanged");
+        iF.addAction("fm.last.android.playbackpaused");
+        iF.addAction("com.sec.android.app.music.metachanged");
+        iF.addAction("com.nullsoft.winamp.metachanged");
+        iF.addAction("com.nullsoft.winamp.playstatechanged");
+        iF.addAction("com.amazon.mp3.metachanged");
+        iF.addAction("com.amazon.mp3.playstatechanged");
+        iF.addAction("com.miui.player.metachanged");
+        iF.addAction("com.miui.player.playstatechanged");
+        iF.addAction("com.real.IMP.metachanged");
+        iF.addAction("com.real.IMP.playstatechanged");
+        iF.addAction("com.sonyericsson.music.metachanged");
+        iF.addAction("com.sonyericsson.music.playstatechanged");
+        iF.addAction("com.rdio.android.metachanged");
+        iF.addAction("com.rdio.android.playstatechanged");
+        iF.addAction("com.samsung.sec.android.MusicPlayer.metachanged");
+        iF.addAction("com.samsung.sec.android.MusicPlayer.playstatechanged");
+        iF.addAction("com.andrew.apollo.metachanged");
+        iF.addAction("com.andrew.apollo.playstatechanged");
+        iF.addAction("com.htc.music.metachanged");
+        iF.addAction("com.htc.music.playstatechanged");
+        iF.addAction("com.spotify.music.playbackstatechanged");
+        iF.addAction("com.spotify.music.metadatachanged");
+        iF.addAction("com.spotify.music.queuechanged");
+        iF.addAction("com.rhapsody.playstatechanged");
+
+        registerReceiver(musicReceiver, iF);
 
         LocationManager locationManager = LocationInfo.getLocation(this);
 
@@ -133,6 +167,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
     @Override
     public void onProviderEnabled(String provider) {
 
+    }
+
+    @Override
+    public void onDestroy(){
+        unregisterReceiver(musicReceiver);
+        super.onDestroy();
     }
 
     public void tabHandler(View target){

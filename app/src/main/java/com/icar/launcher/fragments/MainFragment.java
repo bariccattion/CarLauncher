@@ -1,15 +1,23 @@
 package com.icar.launcher.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.andremion.music.MusicCoverView;
 import com.icar.launcher.R;
 import com.tunabaranurut.microdb.base.MicroDB;
 
@@ -35,9 +43,13 @@ public class MainFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     MicroDB microDB;
-    ElasticView elasticView;
+    ElasticView elasticView,elasticView2;
     TextView temp, pressure, humidity, cityName;
     com.airbnb.lottie.LottieAnimationView weatherImg;
+    AudioManager myAudioManager;
+    LinearLayout lLayout2,lLayout;
+    TextView albumtext,artisttext,tracktext;
+    private MusicCoverView mCoverView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -86,10 +98,96 @@ public class MainFragment extends Fragment {
         pressure=rootView.findViewById(R.id.pressure);
         humidity=rootView.findViewById(R.id.humidity);
         cityName=rootView.findViewById(R.id.cityName);
+        albumtext=rootView.findViewById(R.id.AlbumName);
+        artisttext=rootView.findViewById(R.id.ArtistName);
+        tracktext=rootView.findViewById(R.id.TrackName);
+        lLayout=rootView.findViewById(R.id.weatherLayout);
+        lLayout2=rootView.findViewById(R.id.musicPlayer);
 
+        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("musicInfo"));
         //GoogleClock g = rootView.findViewById(R.id.gclock);
         elasticView = rootView.findViewById(R.id.weatherWidget);
+        mCoverView = (MusicCoverView) rootView.findViewById(R.id.albumLogo);
+        mCoverView.setCallbacks(new MusicCoverView.Callbacks() {
+            @Override
+            public void onMorphEnd(MusicCoverView coverView) {
+                if (MusicCoverView.SHAPE_CIRCLE == coverView.getShape()) {
+                    coverView.start();
+                }
+            }
 
+            @Override
+            public void onRotateEnd(MusicCoverView coverView) {
+                coverView.morph();
+            }
+        });
+
+        elasticView2 = rootView.findViewById(R.id.musicWidget);
+        mCoverView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mCoverView.isRunning()) {
+                    mCoverView.stop();
+                } else {
+                    mCoverView.morph();
+                }
+            }
+        });
+
+        elasticView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                lLayout2.animate()
+                        .alpha(0f)
+                        .setDuration(500)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                lLayout2.setVisibility(View.GONE);
+                                lLayout.setAlpha(0f);
+                                lLayout.setVisibility(View.VISIBLE);
+                                lLayout.animate()
+                                        .alpha(1.0f)
+                                        .setDuration(500)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationEnd(Animator animation) {
+                                            }
+                                        });
+                            }
+                        });
+
+            }
+        });
+
+        elasticView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(albumtext.getText()!=null && albumtext.getText()!=""){
+                    lLayout.animate()
+                            .alpha(0f)
+                            .setDuration(500)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    lLayout.setVisibility(View.GONE);
+                                    lLayout2.setAlpha(0f);
+                                    lLayout2.setVisibility(View.VISIBLE);
+                                    lLayout2.animate()
+                                            .alpha(1.0f)
+                                            .setDuration(500)
+                                            .setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationEnd(Animator animation) {
+                                                }
+                                            });
+                                }
+                            });
+
+                }
+            }
+        });
 
         //Animation test = g.getAnimation();
         //weatherSensor = new WeatherViewSensorEventListener(this.getContext(), weatherView);
@@ -100,7 +198,31 @@ public class MainFragment extends Fragment {
         return rootView;
     }
 
+    BroadcastReceiver broadcastReceiver =  new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
 
+            Bundle b = intent.getExtras();
+
+            String album = b.getString("album");
+            String artist = b.getString("artist");
+            String track = b.getString("track");
+            String notify_artistname = b.getString("notify_artistname");
+            String notify_audioname = b.getString("notify_audioname");
+
+            if(track != null && !track.isEmpty()){
+                lLayout.setVisibility(View.GONE);
+                lLayout2.setVisibility(View.VISIBLE);
+                albumtext.setText(track);
+                artisttext.setText(artist);
+                tracktext.setText(album);
+
+
+            }
+            //String album = b.getString("album");
+
+        }
+    };
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
