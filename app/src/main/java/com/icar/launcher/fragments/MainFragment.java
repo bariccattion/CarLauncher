@@ -18,10 +18,17 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.andremion.music.MusicCoverView;
+import com.bumptech.glide.Glide;
 import com.icar.launcher.R;
+import com.icar.launcher.api.APIService;
+import com.icar.launcher.api.ServiceFactory;
+import com.icar.launcher.api.model.TrackModel;
 import com.tunabaranurut.microdb.base.MicroDB;
 
 import io.armcha.elasticview.ElasticView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import studios.codelight.weatherdownloaderlibrary.model.WeatherData;
 
 
@@ -205,7 +212,7 @@ public class MainFragment extends Fragment {
             Bundle b = intent.getExtras();
 
             String album = b.getString("album");
-            String artist = b.getString("artist");
+            final String artist = b.getString("artist");
             String track = b.getString("track");
             String notify_artistname = b.getString("notify_artistname");
             String notify_audioname = b.getString("notify_audioname");
@@ -217,7 +224,35 @@ public class MainFragment extends Fragment {
                 artisttext.setText(artist);
                 tracktext.setText(album);
 
+                APIService service = ServiceFactory.getInstance();
+                Call<TrackModel> trackModelCall = service.getTracks(artist+" "+track+" "+album);
+                trackModelCall.enqueue(new Callback<TrackModel>() {
+                    @Override
+                    public void onResponse(Call<TrackModel> call, Response<TrackModel> response) {
+                        TrackModel trackModel = response.body();
+                        weatherImg.setSpeed((float) 0.5);
+                        if (trackModel.getResultCount() > 0 ) {
+                            for(int i=0;i<trackModel.getResultCount();i++){
+                                if(trackModel.getTracks().get(i).getArtistName().contains(artist)){
+                                    Glide.with(getContext())
+                                            .load(trackModel.getTracks().get(i).getArtworkUrl100())
+                                            .into(mCoverView);
+                                }
+                            }
+                        } else {
+                            Glide.with(getContext())
+                                    .load("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/0441c1c5-1d8c-4795-bd2b-09d00f49ab64/day4crn-500cb08a-3e2a-49d9-93c7-23a2f534ebba.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzA0NDFjMWM1LTFkOGMtNDc5NS1iZDJiLTA5ZDAwZjQ5YWI2NFwvZGF5NGNybi01MDBjYjA4YS0zZTJhLTQ5ZDktOTNjNy0yM2EyZjUzNGViYmEucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.EqdBDCHlgUGyMye2pNXiLiTuOUIPWxaev6NuBd2kpy0")
+                                    .into(mCoverView);
+                        }
+                    }
 
+                    @Override
+                    public void onFailure(Call<TrackModel> call, Throwable t) {
+                        Glide.with(getContext())
+                                .load("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/0441c1c5-1d8c-4795-bd2b-09d00f49ab64/day4crn-500cb08a-3e2a-49d9-93c7-23a2f534ebba.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzA0NDFjMWM1LTFkOGMtNDc5NS1iZDJiLTA5ZDAwZjQ5YWI2NFwvZGF5NGNybi01MDBjYjA4YS0zZTJhLTQ5ZDktOTNjNy0yM2EyZjUzNGViYmEucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.EqdBDCHlgUGyMye2pNXiLiTuOUIPWxaev6NuBd2kpy0")
+                                .into(mCoverView);
+                    }
+                });
             }
             //String album = b.getString("album");
 
