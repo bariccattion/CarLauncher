@@ -6,19 +6,16 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.icar.launcher.adapters.MyItemRecyclerViewAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.icar.launcher.R;
+import com.icar.launcher.adapters.MyItemRecyclerViewAdapter;
 import com.icar.launcher.content.AppListContent;
 
 import java.util.ArrayList;
@@ -117,6 +114,9 @@ public class ListFragment extends Fragment {
         for (int i=0; i < packList.size(); i++)
         {
             PackageInfo packInfo = packList.get(i);
+            if (  (packInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+
+
             Drawable d;
             try
             {
@@ -128,6 +128,7 @@ public class ListFragment extends Fragment {
             }
 
             list.add(new AppListContent.AppItem(packInfo.applicationInfo.loadLabel(globalContext.getPackageManager()).toString(),packInfo.applicationInfo.packageName,packInfo.versionName,d));
+            }
         }
         recyclerView.setAdapter(new MyItemRecyclerViewAdapter(list,mListener));
     }
