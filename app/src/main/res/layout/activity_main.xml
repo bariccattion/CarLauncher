@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
+    android:background="@color/colorPrimaryBg"
     tools:context=".activities.MainActivity">
 
     <LinearLayout
@@ -30,7 +31,7 @@
                         android:layout_width="80dp"
                         android:layout_height="0dip"
                         android:layout_weight="1.0"
-                        android:background="#26003B46"
+                        android:background="#4000332C"
                         android:onClick="tabHandler"
                         android:src="@drawable/ic_action_name" />
 
@@ -39,7 +40,7 @@
                         android:layout_width="80dp"
                         android:layout_height="0dip"
                         android:layout_weight="1.0"
-                        android:background="#26003B46"
+                        android:background="#4000332C"
                         android:onClick="tabHandler"
                         android:src="@drawable/ic_operatingsystem" />
 
@@ -48,7 +49,7 @@
                         android:layout_width="80dp"
                         android:layout_height="0dip"
                         android:layout_weight="1.0"
-                        android:background="#26003B46"
+                        android:background="#4000332C"
                         android:onClick="tabHandler"
                         android:src="@drawable/ic_microphone" />
                 </LinearLayout>
@@ -73,13 +74,13 @@
                 app:lottie_fileName="bg.json"
                 app:lottie_loop="true"
                 app:lottie_scale="20"
-                app:lottie_speed="0.75" />
+                app:lottie_speed="0.5" />
 
             <FrameLayout
                 android:id="@+id/fragment_container"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"></FrameLayout>
+                android:orientation="horizontal" />
 
         </FrameLayout>
     </LinearLayout>

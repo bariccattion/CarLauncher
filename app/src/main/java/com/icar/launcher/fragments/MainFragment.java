@@ -2,6 +2,10 @@ package com.icar.launcher.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.appwidget.AppWidgetHost;
+import android.appwidget.AppWidgetHostView;
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProviderInfo;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,11 +29,16 @@ import com.icar.launcher.api.ServiceFactory;
 import com.icar.launcher.api.model.TrackModel;
 import com.tunabaranurut.microdb.base.MicroDB;
 
+import java.util.ArrayList;
+
 import io.armcha.elasticview.ElasticView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import studios.codelight.weatherdownloaderlibrary.model.WeatherData;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -56,7 +65,12 @@ public class MainFragment extends Fragment {
     AudioManager myAudioManager;
     LinearLayout lLayout2,lLayout;
     TextView albumtext,artisttext,tracktext;
+    private static AppWidgetManager mAppWidgetManager;
+    private static AppWidgetHost mAppWidgetHost;
     private MusicCoverView mCoverView;
+    private static final int HARDCODED_ID = 0;
+    private static final int REQUEST_PICK_APPWIDGET = 1;
+    private static final int REQUEST_CREATE_APPWIDGET = 5;
 
     private OnFragmentInteractionListener mListener;
 
@@ -99,6 +113,10 @@ public class MainFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         //weatherView = rootView.findViewById(R.id.weather_view);
 
+
+
+        mAppWidgetManager = AppWidgetManager.getInstance(getContext());
+        mAppWidgetHost = new AppWidgetHost(getContext(), HARDCODED_ID);
 
         weatherImg = rootView.findViewById(R.id.climateAnimation);
         temp=rootView.findViewById(R.id.temp);
@@ -279,9 +297,91 @@ public class MainFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        mAppWidgetHost.stopListening();
+        mAppWidgetHost = null;
         mListener = null;
     }
+    void selectWidget() {
+        int appWidgetId = this.mAppWidgetHost.allocateAppWidgetId();
+        Intent pickIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_PICK);
+        pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        addEmptyData(pickIntent);
+        startActivityForResult(pickIntent, REQUEST_PICK_APPWIDGET);
+    }
 
+    void addEmptyData(Intent pickIntent) {
+        ArrayList<AppWidgetProviderInfo> customInfo =
+                new ArrayList<AppWidgetProviderInfo>();
+        pickIntent.putParcelableArrayListExtra(
+                AppWidgetManager.EXTRA_CUSTOM_INFO, customInfo);
+        ArrayList<Bundle> customExtras = new ArrayList<Bundle>();
+        pickIntent.putParcelableArrayListExtra(
+                AppWidgetManager.EXTRA_CUSTOM_EXTRAS, customExtras);
+    };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (resultCode == RESULT_OK ) {
+            if (requestCode == REQUEST_PICK_APPWIDGET) {
+                configureWidget(data);
+            }
+            else if (requestCode == REQUEST_CREATE_APPWIDGET) {
+                createWidget(data);
+            }
+        }
+        else if (resultCode == RESULT_CANCELED && data != null) {
+            int appWidgetId =
+                    data.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+            if (appWidgetId != -1) {
+                mAppWidgetHost.deleteAppWidgetId(appWidgetId);
+            }
+        }
+    }
+
+    private void configureWidget(Intent data) {
+        Bundle extras = data.getExtras();
+        int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+        AppWidgetProviderInfo appWidgetInfo =
+                mAppWidgetManager.getAppWidgetInfo(appWidgetId);
+        if (appWidgetInfo.configure != null) {
+            Intent intent =
+                    new Intent(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
+            intent.setComponent(appWidgetInfo.configure);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            startActivityForResult(intent, REQUEST_CREATE_APPWIDGET);
+        } else {
+            createWidget(data);
+        }
+    }
+
+    public void createWidget(Intent data) {
+        Bundle extras = data.getExtras();
+        int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+        AppWidgetProviderInfo appWidgetInfo =
+                mAppWidgetManager.getAppWidgetInfo(appWidgetId);
+        AppWidgetHostView hostView =
+                mAppWidgetHost.createView(getContext(), appWidgetId, appWidgetInfo);
+        hostView.setAppWidget(appWidgetId, appWidgetInfo);
+        layout.addView(hostView);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAppWidgetHost.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mAppWidgetHost.stopListening();
+    }
+
+    public void removeWidget(AppWidgetHostView hostView) {
+        mAppWidgetHost.deleteAppWidgetId(hostView.getAppWidgetId());
+        layout.removeView(hostView);
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

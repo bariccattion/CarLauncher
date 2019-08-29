@@ -25,6 +25,8 @@ import com.icar.launcher.fragments.MainFragment;
 import com.icar.launcher.location.LocationInfo;
 import com.icar.launcher.receiver.MusicReceiver;
 import com.tunabaranurut.microdb.base.MicroDB;
+import com.yarolegovich.slidingrootnav.SlideGravity;
+import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
 import studios.codelight.weatherdownloaderlibrary.WeatherDownloader;
 import studios.codelight.weatherdownloaderlibrary.model.WeatherData;
@@ -52,6 +54,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
 
         microDB = new MicroDB(this);
 
+
+        new SlidingRootNavBuilder(this)
+                .withMenuLayout(R.layout.settings_menu)
+                .withGravity(SlideGravity.RIGHT)
+                .withDragDistance(120)
+                .inject();
 
         //GeoLocator geoLocator = new GeoLocator(getApplicationContext(),MainActivity.this);
         //String coordinatesQuery = geoLocator.getLattitude()+":"+geoLocator.getLongitude();
