@@ -1,13 +1,10 @@
 package com.icar.launcher.activities;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TabHost;
@@ -22,22 +19,15 @@ import com.icar.launcher.content.AppListContent;
 import com.icar.launcher.fragments.CarFragment;
 import com.icar.launcher.fragments.ListFragment;
 import com.icar.launcher.fragments.MainFragment;
-import com.icar.launcher.location.LocationInfo;
-import com.icar.launcher.receiver.MusicReceiver;
 import com.tunabaranurut.microdb.base.MicroDB;
 import com.yarolegovich.slidingrootnav.SlideGravity;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
-import studios.codelight.weatherdownloaderlibrary.WeatherDownloader;
-import studios.codelight.weatherdownloaderlibrary.model.WeatherData;
-
-public class MainActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener, ListFragment.OnListFragmentInteractionListener, WeatherDownloader.WeatherDataDownloadListener, LocationListener {
+public class MainActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener, ListFragment.OnListFragmentInteractionListener, LocationListener {
     ImageButton button1,button2,button3;
     TabHost tabHost;
     FragmentManager fm;
     MicroDB microDB;
-    Double latitude, longitude;
-    MusicReceiver musicReceiver = new MusicReceiver();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -57,53 +47,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
 
         new SlidingRootNavBuilder(this)
                 .withMenuLayout(R.layout.settings_menu)
-                .withGravity(SlideGravity.RIGHT)
+                .withGravity(SlideGravity.LEFT)
                 .withDragDistance(120)
                 .inject();
 
-        //GeoLocator geoLocator = new GeoLocator(getApplicationContext(),MainActivity.this);
-        //String coordinatesQuery = geoLocator.getLattitude()+":"+geoLocator.getLongitude();
-
-
-        IntentFilter iF = new IntentFilter();
-        iF.addAction("com.android.music.metachanged");
-        iF.addAction("com.android.music.playstatechanged");
-        iF.addAction("fm.last.android.metachanged");
-        iF.addAction("fm.last.android.playbackpaused");
-        iF.addAction("com.sec.android.app.music.metachanged");
-        iF.addAction("com.nullsoft.winamp.metachanged");
-        iF.addAction("com.nullsoft.winamp.playstatechanged");
-        iF.addAction("com.amazon.mp3.metachanged");
-        iF.addAction("com.amazon.mp3.playstatechanged");
-        iF.addAction("com.miui.player.metachanged");
-        iF.addAction("com.miui.player.playstatechanged");
-        iF.addAction("com.real.IMP.metachanged");
-        iF.addAction("com.real.IMP.playstatechanged");
-        iF.addAction("com.sonyericsson.music.metachanged");
-        iF.addAction("com.sonyericsson.music.playstatechanged");
-        iF.addAction("com.rdio.android.metachanged");
-        iF.addAction("com.rdio.android.playstatechanged");
-        iF.addAction("com.samsung.sec.android.MusicPlayer.metachanged");
-        iF.addAction("com.samsung.sec.android.MusicPlayer.playstatechanged");
-        iF.addAction("com.andrew.apollo.metachanged");
-        iF.addAction("com.andrew.apollo.playstatechanged");
-        iF.addAction("com.htc.music.metachanged");
-        iF.addAction("com.htc.music.playstatechanged");
-        iF.addAction("com.spotify.music.playbackstatechanged");
-        iF.addAction("com.spotify.music.metadatachanged");
-        iF.addAction("com.spotify.music.queuechanged");
-        iF.addAction("com.rhapsody.playstatechanged");
-
-        registerReceiver(musicReceiver, iF);
-
-        LocationManager locationManager = LocationInfo.getLocation(this);
-
-        String coordinatesQuery = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLatitude() + ":" + locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLongitude();
-        WeatherDownloader downloader = new WeatherDownloader(this, WeatherDownloader.Mode.COORDINATES);
-        downloader.getCurrentWeatherData(getResources().getString(R.string.apikey), coordinatesQuery);
-
-
-
+        MainFragment();
     }
 
 
@@ -126,17 +74,26 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
     }
 
     @Override
-    public void onWeatherDownloadComplete(WeatherData data, WeatherDownloader.Mode mode) {
-        try{microDB.save("weatherInfo",data);}catch (Exception e){
+    public void onLocationChanged(Location location) {
 
-        }
-        MainFragment();
+
     }
 
     @Override
-    public void onWeatherDownloadFailed(Exception e) {
-        Log.d("D","D");
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
     }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        //Toast.makeText(OfflineGPS.this, "Please Enable GPS", Toast.LENGTH_SHORT).show();
+    }
+
     private void hideSystemUI() {
         // Enables regular immersive mode.
         // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
@@ -154,32 +111,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
 
-        //locationText = location.getLatitude() + "," + location.getLongitude();
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        //Toast.makeText(OfflineGPS.this, "Please Enable GPS", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
 
     @Override
     public void onDestroy(){
-        unregisterReceiver(musicReceiver);
         super.onDestroy();
     }
 

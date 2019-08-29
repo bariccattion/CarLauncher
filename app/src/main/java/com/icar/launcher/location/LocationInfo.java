@@ -36,7 +36,7 @@ public abstract class LocationInfo implements LocationListener {
 
     }
 
-    public static LocationManager getLocation(Context context) {
+    public static LocationManager getLocation(Context context, String provider) {
         LocationManager locationManager;
 
 
@@ -49,7 +49,7 @@ public abstract class LocationInfo implements LocationListener {
 
         try {
             locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 5, (LocationListener) context);
+            locationManager.requestLocationUpdates(provider, 2000, 5, (LocationListener) context);
             //locationLatitude=locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
             //locationLongitude=locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude();
         } catch (SecurityException e) {

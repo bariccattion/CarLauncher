@@ -1,41 +1,31 @@
 package com.icar.launcher.fragments;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
+import android.app.Dialog;
 import android.appwidget.AppWidgetHost;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
-import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.media.AudioManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import com.andremion.music.MusicCoverView;
-import com.bumptech.glide.Glide;
 import com.icar.launcher.R;
-import com.icar.launcher.api.APIService;
-import com.icar.launcher.api.ServiceFactory;
-import com.icar.launcher.api.model.TrackModel;
 import com.tunabaranurut.microdb.base.MicroDB;
 
 import java.util.ArrayList;
-
-import io.armcha.elasticview.ElasticView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import studios.codelight.weatherdownloaderlibrary.model.WeatherData;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -59,22 +49,16 @@ public class MainFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     MicroDB microDB;
-    ElasticView elasticView,elasticView2;
-    TextView temp, pressure, humidity, cityName;
-    com.airbnb.lottie.LottieAnimationView weatherImg;
-    AudioManager myAudioManager;
-    LinearLayout lLayout2,lLayout;
-    TextView albumtext,artisttext,tracktext;
+    LinearLayout layoutWidget1,layoutWidget2,layoutChoosen;
+
     private static AppWidgetManager mAppWidgetManager;
     private static AppWidgetHost mAppWidgetHost;
-    private MusicCoverView mCoverView;
     private static final int HARDCODED_ID = 0;
     private static final int REQUEST_PICK_APPWIDGET = 1;
     private static final int REQUEST_CREATE_APPWIDGET = 5;
 
     private OnFragmentInteractionListener mListener;
 
-    WeatherData data;
     public MainFragment() {
         // Required empty public constructor
     }
@@ -113,169 +97,34 @@ public class MainFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         //weatherView = rootView.findViewById(R.id.weather_view);
 
+        layoutWidget1 = rootView.findViewById(R.id.widget1);
+        layoutWidget2 = rootView.findViewById(R.id.widget2);
 
+        layoutWidget1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectFirstWidget();
+            }
+        });
+
+        layoutWidget2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectSecondWidget();
+            }
+        });
 
         mAppWidgetManager = AppWidgetManager.getInstance(getContext());
         mAppWidgetHost = new AppWidgetHost(getContext(), HARDCODED_ID);
 
-        weatherImg = rootView.findViewById(R.id.climateAnimation);
-        temp=rootView.findViewById(R.id.temp);
-        pressure=rootView.findViewById(R.id.pressure);
-        humidity=rootView.findViewById(R.id.humidity);
-        cityName=rootView.findViewById(R.id.cityName);
-        albumtext=rootView.findViewById(R.id.AlbumName);
-        artisttext=rootView.findViewById(R.id.ArtistName);
-        tracktext=rootView.findViewById(R.id.TrackName);
-        lLayout=rootView.findViewById(R.id.weatherLayout);
-        lLayout2=rootView.findViewById(R.id.musicPlayer);
 
-        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("musicInfo"));
-        //GoogleClock g = rootView.findViewById(R.id.gclock);
-        elasticView = rootView.findViewById(R.id.weatherWidget);
-        mCoverView = (MusicCoverView) rootView.findViewById(R.id.albumLogo);
-        mCoverView.setCallbacks(new MusicCoverView.Callbacks() {
-            @Override
-            public void onMorphEnd(MusicCoverView coverView) {
-                if (MusicCoverView.SHAPE_CIRCLE == coverView.getShape()) {
-                    coverView.start();
-                }
-            }
-
-            @Override
-            public void onRotateEnd(MusicCoverView coverView) {
-                coverView.morph();
-            }
-        });
-
-        elasticView2 = rootView.findViewById(R.id.musicWidget);
-        mCoverView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mCoverView.isRunning()) {
-                    mCoverView.stop();
-                } else {
-                    mCoverView.morph();
-                }
-            }
-        });
-
-        elasticView2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                lLayout2.animate()
-                        .alpha(0f)
-                        .setDuration(500)
-                        .setListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                lLayout2.setVisibility(View.GONE);
-                                lLayout.setAlpha(0f);
-                                lLayout.setVisibility(View.VISIBLE);
-                                lLayout.animate()
-                                        .alpha(1.0f)
-                                        .setDuration(500)
-                                        .setListener(new AnimatorListenerAdapter() {
-                                            @Override
-                                            public void onAnimationEnd(Animator animation) {
-                                            }
-                                        });
-                            }
-                        });
-
-            }
-        });
-
-        elasticView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(albumtext.getText()!=null && albumtext.getText()!=""){
-                    lLayout.animate()
-                            .alpha(0f)
-                            .setDuration(500)
-                            .setListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    lLayout.setVisibility(View.GONE);
-                                    lLayout2.setAlpha(0f);
-                                    lLayout2.setVisibility(View.VISIBLE);
-                                    lLayout2.animate()
-                                            .alpha(1.0f)
-                                            .setDuration(500)
-                                            .setListener(new AnimatorListenerAdapter() {
-                                                @Override
-                                                public void onAnimationEnd(Animator animation) {
-                                                }
-                                            });
-                                }
-                            });
-
-                }
-            }
-        });
-
-        //Animation test = g.getAnimation();
-        //weatherSensor = new WeatherViewSensorEventListener(this.getContext(), weatherView);
         microDB = new MicroDB(getContext());
 
-        doWeatherStuff();
+        //openWidgetChooser();
 
         return rootView;
     }
 
-    BroadcastReceiver broadcastReceiver =  new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            Bundle b = intent.getExtras();
-
-            String album = b.getString("album");
-            final String artist = b.getString("artist");
-            String track = b.getString("track");
-            String notify_artistname = b.getString("notify_artistname");
-            String notify_audioname = b.getString("notify_audioname");
-
-            if(track != null && !track.isEmpty()){
-                lLayout.setVisibility(View.GONE);
-                lLayout2.setVisibility(View.VISIBLE);
-                albumtext.setText(track);
-                artisttext.setText(artist);
-                tracktext.setText(album);
-
-                APIService service = ServiceFactory.getInstance();
-                Call<TrackModel> trackModelCall = service.getTracks(artist+" "+track+" "+album);
-                trackModelCall.enqueue(new Callback<TrackModel>() {
-                    @Override
-                    public void onResponse(Call<TrackModel> call, Response<TrackModel> response) {
-                        TrackModel trackModel = response.body();
-                        weatherImg.setSpeed((float) 0.5);
-                        if (trackModel.getResultCount() > 0 ) {
-                            for(int i=0;i<trackModel.getResultCount();i++){
-                                if(trackModel.getTracks().get(i).getArtistName().contains(artist)){
-                                    Glide.with(getContext())
-                                            .load(trackModel.getTracks().get(i).getArtworkUrl100())
-                                            .into(mCoverView);
-                                }
-                            }
-                        } else {
-                            Glide.with(getContext())
-                                    .load("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/0441c1c5-1d8c-4795-bd2b-09d00f49ab64/day4crn-500cb08a-3e2a-49d9-93c7-23a2f534ebba.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzA0NDFjMWM1LTFkOGMtNDc5NS1iZDJiLTA5ZDAwZjQ5YWI2NFwvZGF5NGNybi01MDBjYjA4YS0zZTJhLTQ5ZDktOTNjNy0yM2EyZjUzNGViYmEucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.EqdBDCHlgUGyMye2pNXiLiTuOUIPWxaev6NuBd2kpy0")
-                                    .into(mCoverView);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<TrackModel> call, Throwable t) {
-                        Glide.with(getContext())
-                                .load("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/0441c1c5-1d8c-4795-bd2b-09d00f49ab64/day4crn-500cb08a-3e2a-49d9-93c7-23a2f534ebba.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzA0NDFjMWM1LTFkOGMtNDc5NS1iZDJiLTA5ZDAwZjQ5YWI2NFwvZGF5NGNybi01MDBjYjA4YS0zZTJhLTQ5ZDktOTNjNy0yM2EyZjUzNGViYmEucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.EqdBDCHlgUGyMye2pNXiLiTuOUIPWxaev6NuBd2kpy0")
-                                .into(mCoverView);
-                    }
-                });
-            }
-            //String album = b.getString("album");
-
-        }
-    };
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -301,12 +150,39 @@ public class MainFragment extends Fragment {
         mAppWidgetHost = null;
         mListener = null;
     }
+
     void selectWidget() {
         int appWidgetId = this.mAppWidgetHost.allocateAppWidgetId();
         Intent pickIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_PICK);
         pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         addEmptyData(pickIntent);
         startActivityForResult(pickIntent, REQUEST_PICK_APPWIDGET);
+    }
+
+    public void selectFirstWidget(){
+        layoutChoosen=layoutWidget1;
+        layoutChoosen.setClickable(false);
+        layoutChoosen.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                selectFirstWidget();
+                return false;
+            }
+        });
+        selectWidget();
+    }
+
+    public void selectSecondWidget(){
+        layoutChoosen=layoutWidget2;
+        layoutChoosen.setClickable(false);
+        layoutChoosen.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                selectSecondWidget();
+                return false;
+            }
+        });
+        selectWidget();
     }
 
     void addEmptyData(Intent pickIntent) {
@@ -320,7 +196,7 @@ public class MainFragment extends Fragment {
     };
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode,
+    public void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
         if (resultCode == RESULT_OK ) {
             if (requestCode == REQUEST_PICK_APPWIDGET) {
@@ -338,6 +214,7 @@ public class MainFragment extends Fragment {
             }
         }
     }
+
 
     private void configureWidget(Intent data) {
         Bundle extras = data.getExtras();
@@ -363,7 +240,8 @@ public class MainFragment extends Fragment {
         AppWidgetHostView hostView =
                 mAppWidgetHost.createView(getContext(), appWidgetId, appWidgetInfo);
         hostView.setAppWidget(appWidgetId, appWidgetInfo);
-        layout.addView(hostView);
+        layoutChoosen.removeAllViewsInLayout();
+        layoutChoosen.addView(hostView);
     }
 
     @Override
@@ -380,8 +258,66 @@ public class MainFragment extends Fragment {
 
     public void removeWidget(AppWidgetHostView hostView) {
         mAppWidgetHost.deleteAppWidgetId(hostView.getAppWidgetId());
-        layout.removeView(hostView);
+        layoutChoosen.removeView(hostView);
     }
+
+    public void openWidgetChooser() {
+
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+
+        // Set Custom Title
+        TextView title = new TextView(getContext());
+        // Title Properties
+        title.setText(R.string.choosewidgettitle);
+        title.setPadding(10, 10, 10, 10);   // Set Position
+        title.setGravity(Gravity.CENTER);
+        title.setTextColor(Color.BLACK);
+        title.setTextSize(20);
+        alertDialog.setCustomTitle(title);
+
+        // Set Message
+        TextView msg = new TextView(getContext());
+        // Message Properties
+        msg.setText(R.string.choosewidgettext);
+        msg.setGravity(Gravity.CENTER_HORIZONTAL);
+        msg.setTextColor(Color.BLACK);
+        alertDialog.setView(msg);
+
+        // Set Button
+        // you can more buttons
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,getResources().getString(R.string.widget2), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                layoutChoosen=layoutWidget2;
+                selectWidget();
+            }
+        });
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,getResources().getString(R.string.widget1), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                layoutChoosen=layoutWidget1;
+                selectWidget();
+            }
+        });
+
+        new Dialog(getContext());
+        alertDialog.show();
+
+        // Set Properties for OK Button
+        final Button okBT = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        LinearLayout.LayoutParams positiveBtnLP = (LinearLayout.LayoutParams) okBT.getLayoutParams();
+        positiveBtnLP.gravity = Gravity.FILL_HORIZONTAL;
+        okBT.setTextColor(Color.BLUE);
+        okBT.setLayoutParams(positiveBtnLP);
+
+        final Button cancelBT = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        LinearLayout.LayoutParams negBtnLP = (LinearLayout.LayoutParams) cancelBT.getLayoutParams();
+        negBtnLP.gravity = Gravity.FILL_HORIZONTAL;
+        cancelBT.setTextColor(Color.BLUE);
+        cancelBT.setLayoutParams(negBtnLP);
+
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -398,55 +334,5 @@ public class MainFragment extends Fragment {
     }
 
 
-    private void doWeatherStuff() {
-        try{data = microDB.load("weatherInfo",WeatherData.class);}catch (Exception e){}
 
-        if(Integer.parseInt(data.getWeather()[0].getId())>=200 && Integer.parseInt(data.getWeather()[0].getId())<300){
-            //Thunderstorm
-            //weatherView.setWeatherData(PrecipType.RAIN);
-            //weatherView.setSpeed(1000);
-            //weatherView.setEmissionRate(1000);
-            weatherImg.setAnimation("storm.json");
-            //weatherImg.setImageResource(R.drawable.ic_storm);
-        }
-        else if(Integer.parseInt(data.getWeather()[0].getId())>=300 && Integer.parseInt(data.getWeather()[0].getId())<400){
-            //Drizzle
-            //weatherView.setWeatherData(PrecipType.RAIN);
-            //weatherView.setSpeed(600);
-            //weatherView.setEmissionRate(200);
-            //weatherImg.setImageResource(R.drawable.ic_lightrain)
-            weatherImg.setAnimation("rain.json");
-            weatherImg.setSpeed((float) 0.5);
-
-        }
-        else if(Integer.parseInt(data.getWeather()[0].getId())>=500 && Integer.parseInt(data.getWeather()[0].getId())<600){
-            //weatherView.setWeatherData(PrecipType.RAIN);
-            //weatherView.setSpeed(800);
-            //weatherView.setEmissionRate(600);
-            weatherImg.setAnimation("rain.json");
-        }
-        else if(Integer.parseInt(data.getWeather()[0].getId())>=600 && Integer.parseInt(data.getWeather()[0].getId())<700){
-            //weatherView.setWeatherData(PrecipType.SNOW);
-            weatherImg.setAnimation("snow.json");
-        }
-        else if(Integer.parseInt(data.getWeather()[0].getId())==800){
-            //limpo
-            //weatherView.setWeatherData(PrecipType.CLEAR);
-            weatherImg.setAnimation("sun.json");
-            weatherImg.setSpeed((float) 0.5);
-        }
-        else if(Integer.parseInt(data.getWeather()[0].getId())==803 || Integer.parseInt(data.getWeather()[0].getId())==804){
-            //	lots of clouds
-            weatherImg.setAnimation("clouds.json");
-        }
-        else{
-            //some clouds
-            weatherImg.setAnimation("someclouds.json");
-        }
-        temp.setText("Temperatura: "+(int)(Double.parseDouble(data.getMain().getTemp())-273.15) + " °C");
-        pressure.setText("Pressão: "+(int)(Double.parseDouble(data.getMain().getPressure())) + " hPa");
-        humidity.setText("Humidade: "+data.getMain().getHumidity() + " %");
-        cityName.setText(data.getName());
-
-    }
 }

@@ -34,7 +34,7 @@ public class CarFragment extends Fragment implements GpsListener {
         thiscontainer = container;
 
         speedoMeterView = rootView.findViewById(R.id.speedMeter);
-        LocationManager locationManager = LocationInfo.getLocation(thiscontainer.getContext());
+        LocationManager locationManager = LocationInfo.getLocation(thiscontainer.getContext(),LocationManager.GPS_PROVIDER);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 0, (float) 0, this);
 
         return rootView;

@@ -7,4 +7,9 @@
     <string name="config">Configurações</string>
     <string name="restart">Reiniciar</string>
     <string name="shutdown">Desligar</string>
+    <string name="widget1">Primeiro Widget</string>
+    <string name="widget2">Segundo Widget</string>
+    <string name="choosewidget">Alterar Widgets</string>
+    <string name="choosewidgettitle">Selecione o Widget</string>
+    <string name="choosewidgettext">Selecione qual Widget deseja alterar</string>
 </resources>
