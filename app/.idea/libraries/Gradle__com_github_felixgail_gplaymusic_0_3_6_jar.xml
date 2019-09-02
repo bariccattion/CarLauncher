@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.felixgail:gplaymusic:0.3.6@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.felixgail/gplaymusic/0.3.6/72f9888f18bd887cb9715fd538d7cc4148f89b78/gplaymusic-0.3.6.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.felixgail/gplaymusic/0.3.6/3d2bfc92731ae01c73014aea1ada0229fe8dab74/gplaymusic-0.3.6-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.felixgail/gplaymusic/0.3.6/d3bef0343c169c8e4032dd4f8c07b39981d439d4/gplaymusic-0.3.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

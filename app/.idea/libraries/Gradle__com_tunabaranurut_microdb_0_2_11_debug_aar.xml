@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: com.tunabaranurut:microdb:0.2.11:debug@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aced49cc7d121847acfa81c427fa5c05/microdb-0.2.11-debug/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aced49cc7d121847acfa81c427fa5c05/microdb-0.2.11-debug/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

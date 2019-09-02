@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: codelight.studios.android:weather-downloader:0.2@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/660558598edaca362684520b64fb2646/weather-downloader-0.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/660558598edaca362684520b64fb2646/weather-downloader-0.2/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/codelight.studios.android/weather-downloader/0.2/98bb1ecf8ee5b34b826d758d3a54d6a62c0ab29/weather-downloader-0.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/codelight.studios.android/weather-downloader/0.2/41dfca21e033949fce54560a72ad50523ee0be5d/weather-downloader-0.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

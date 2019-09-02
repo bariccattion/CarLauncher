@@ -1,21 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginTop="@dimen/defaultpadding"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.CarFragment">
 
     <in.unicodelabs.kdgaugeview.KdGaugeView
-        android:padding="@dimen/defaultpaddinglarge"
         android:id="@+id/speedMeter"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_gravity="center"
-        app:speed_limit="75"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_vertical"
+        android:padding="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:speedDialRingWidth="5dp"
+        app:speedLimitTextSize="0dp"
         app:speedTextColor="@color/colorText"
-        app:speedLimitTextColor="@color/colorText"
+        app:speedTextSize="30dp"
+        app:speed_limit="75"
         app:unitOfMeasurementTextColor="@color/colorText"
-        app:unitOfMeasurementTextSize="15dp" />
+        app:unitOfMeasurementTextSize="10dp" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/speedMeter">
 
-</FrameLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.bjoernpetersen:gpsoauth:0.3.2@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.bjoernpetersen/gpsoauth/0.3.2/bb1fba9801a861f3cabc9457417254341d56d7b0/gpsoauth-0.3.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.bjoernpetersen/gpsoauth/0.3.2/eeb696f0aca7106cbf978a34abfe271d4ee8399e/gpsoauth-0.3.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.bjoernpetersen/gpsoauth/0.3.2/aabbd858e2288dc4ae7861ccdd7af4c51b48dd87/gpsoauth-0.3.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
