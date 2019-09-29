@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.chaquo.python'
 
 android {
     compileSdkVersion 29
@@ -10,16 +9,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-        ndk {
-            abiFilters "arm64-v8a"
-        }
-        python {
-            buildPython "py -3.7"
-            pip {
-                install "six==1.10.0"
-                install "scipy==1.0.1"
-            }
-        }
+
     }
     buildTypes {
         release {
@@ -40,14 +30,8 @@ dependencies {
     implementation 'com.github.armcha:ElasticView:0.2.0'
     implementation 'com.google.android.material:material:1.1.0-alpha09'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
-    implementation 'codelight.studios.android:weather-downloader:0.2'
-    implementation 'com.github.AravindVijay7:GeoLocator-Android:1.0.2'
-    implementation 'com.github.lypeer:GoogleClock:1.0.0'
     implementation 'com.airbnb.android:lottie:3.0.7'
     implementation 'in.unicodelabs.sorbh:kdgaugeview:1.0.0'
-    implementation 'com.github.andremion:musiccoverview:1.0.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'com.yarolegovich:sliding-root-nav:1.1.0'
     implementation(group: 'com.tunabaranurut', name: 'microdb', version: '0.2.11', ext: 'aar', classifier: 'debug') {

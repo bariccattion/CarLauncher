@@ -19,15 +19,4 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
-    <style name="LyTheme2" parent="LyTheme">
-        <item name="lyColor0">#66A5AD</item>
-        <item name="lyColor1">#36767e</item>
-        <item name="lyColor2">#36767e</item>
-        <item name="lyColor3">#66A5AD</item>
-        <!--<item name="lyColor2">#07575B</item>
-        <item name="lyColor3">#C4DFE6</item>-->
-        <item name="lyColorColon">#003B46</item>
-        <item name="lyThickness">@integer/lyThickness_4</item>
-        <item name="lyColonThickness">@integer/lyThickness_1</item>
-    </style>
 </resources>
